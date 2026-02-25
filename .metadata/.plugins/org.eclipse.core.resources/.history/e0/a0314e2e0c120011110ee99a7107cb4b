@@ -1,0 +1,6 @@
+package com.kce.weather.controller;
+
+@RestController
+public class WeatherController {
+
+}

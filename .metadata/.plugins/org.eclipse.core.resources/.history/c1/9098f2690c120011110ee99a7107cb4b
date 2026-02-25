@@ -1,0 +1,10 @@
+package com.kce.weather.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.kce.weather.entity.WeatherReport;
+
+@Repository
+public interface WeatherReportRepository extends JpaRepository<WeatherReport, Long>{
+
+}

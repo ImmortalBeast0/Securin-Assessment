@@ -1,0 +1,43 @@
+package com.kce.weather.service.impl;
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.kce.weather.entity.WeatherReport;
+import com.kce.weather.repository.WeatherReportRepository;
+import com.kce.weather.service.WeatherReportService;
+
+@Service
+public class WeatherReportServiceImpl implements WeatherReportService {
+
+	private final WeatherReportRepository repository;
+
+	public WeatherReportServiceImpl(WeatherReportRepository repository) {
+		this.repository = repository;
+	}
+
+	@Override
+	public WeatherReport getByDate(String date) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
+
+		LocalDateTime ldt = LocalDateTime.parse(date, formatter);
+
+		Instant instant = ldt.atZone(ZoneOffset.UTC).toInstant();
+
+		return repository.findByDate(instant).orElse(null);
+	}
+
+	@Override
+	public List<WeatherReport> getByMonth(int month) {
+		return repository.findAll();
+	}
+
+	@Override
+	public List<WeatherReport> getTemperatureStats(int year) {
+		return repository.findAll(); 
+	}
+}

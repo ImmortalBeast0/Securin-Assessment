@@ -1,0 +1,43 @@
+package com.kce.weather.entity;
+
+import java.time.Instant;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Entity
+public class WeatherReport {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	private Instant weatherDate;
+	private String condition;
+	
+	private Double dewPoint;
+    private Boolean fog;
+    private Boolean hail;
+    private Double heatIndex;
+    private Integer humidity;
+    private Double precipitation;
+    private Double pressure;
+    private Boolean rain;
+    private Boolean snow;
+    private Double temperature;
+    private Boolean thunder;
+    private Boolean tornado;
+    private Double visibility;
+    private Integer windDirectionDegrees;
+    private String windDirection;
+    private Double windGust;
+    private Double windChill;
+    private Double windSpeed;
+}

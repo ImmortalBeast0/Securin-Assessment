@@ -1,0 +1,12 @@
+package com.kce.weather.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class WeatherReport {
+
+}

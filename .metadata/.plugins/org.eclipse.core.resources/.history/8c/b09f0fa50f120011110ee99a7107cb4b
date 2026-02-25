@@ -1,0 +1,8 @@
+package com.kce.weather.service;
+
+
+
+
+public interface WeatherReportService {
+
+}

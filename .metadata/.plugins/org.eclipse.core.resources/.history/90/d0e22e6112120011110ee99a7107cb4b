@@ -1,0 +1,117 @@
+package com.kce.weather.util;
+
+import com.kce.weather.entity.WeatherReport;
+import org.springframework.stereotype.Component;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+public class CsvWeatherReportParser {
+
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
+
+    public List<WeatherReport> parse(InputStream inputStream) throws IOException {
+
+        List<WeatherReport> reports = new ArrayList<>();
+
+        try (BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            boolean isHeader = true;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (isHeader) {
+                    isHeader = false;
+                    continue; 
+                }
+
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                String[] columns = line.split(",");
+
+                try {
+                    WeatherReport report = mapRow(columns);
+                    reports.add(report);
+                } catch (Exception e) {
+                    System.out.println("Skipping invalid row: " + line);
+                }
+            }
+        }
+
+        return reports;
+    }
+
+    private WeatherReport mapRow(String[] columns) {
+
+        WeatherReport report = new WeatherReport();
+
+        report.setWeatherDate(parseDate(columns[0]));
+        report.setCondition(columns[1]);
+
+        report.setDewPoint(parseDouble(columns[2]));
+        report.setFog(parseBoolean(columns[3]));
+        report.setHail(parseBoolean(columns[4]));
+        report.setHeatIndex(parseDouble(columns[5]));
+        report.setHumidity(parseInteger(columns[6]));
+        report.setPrecipitation(parseDouble(columns[7]));
+        report.setPressure(parseDouble(columns[8]));
+        report.setRain(parseBoolean(columns[9]));
+        report.setSnow(parseBoolean(columns[10]));
+        report.setTemperature(parseDouble(columns[11]));
+        report.setThunder(parseBoolean(columns[12]));
+        report.setTornado(parseBoolean(columns[13]));
+        report.setVisibility(parseDouble(columns[14]));
+        report.setWindDirectionDegrees(parseInteger(columns[15]));
+        report.setWindDirection(columns[16]);
+        report.setWindGust(parseDouble(columns[17]));
+        report.setWindChill(parseDouble(columns[18]));
+        report.setWindSpeed(parseDouble(columns[19]));
+
+        return report;
+    }
+
+    private Instant parseDate(String value) {
+        if (value == null || value.isBlank()) return null;
+
+        LocalDateTime localDateTime =
+                LocalDateTime.parse(value.trim(), DATE_FORMATTER);
+
+        return localDateTime
+                .atZone(ZoneOffset.UTC)
+                .toInstant();
+    }
+
+    private Double parseDouble(String value) {
+        if (value == null || value.isBlank()) return null;
+        return Double.parseDouble(value.trim());
+    }
+
+    private Integer parseInteger(String value) {
+        if (value == null || value.isBlank()) return null;
+        return Integer.parseInt(value.trim());
+    }
+
+    private Boolean parseBoolean(String value) {
+        if (value == null || value.isBlank()) return null;
+
+        value = value.trim().toLowerCase();
+
+        return value.equals("1") ||
+               value.equals("true") ||
+               value.equals("yes");
+    }
+}

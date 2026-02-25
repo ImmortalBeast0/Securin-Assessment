@@ -1,0 +1,69 @@
+package com.kce.weather.service.impl;
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.kce.weather.entity.WeatherReport;
+import com.kce.weather.repository.WeatherReportRepository;
+import com.kce.weather.service.WeatherReportService;
+
+import com.kce.weather.util.CsvWeatherReportParser;
+import jakarta.annotation.PostConstruct;
+import java.io.InputStream;
+
+@Service
+public class WeatherReportServiceImpl implements WeatherReportService {
+
+	private final WeatherReportRepository repository;
+	private final CsvWeatherReportParser parser;
+
+    public WeatherReportServiceImpl(WeatherReportRepository repository,
+                                    CsvWeatherReportParser parser) {
+        this.repository = repository;
+        this.parser = parser;
+    }
+
+    @PostConstruct
+    public void loadCsvData() throws Exception {
+
+        InputStream inputStream =
+                getClass().getClassLoader()
+                        .getResourceAsStream("WeatherReport.csv");
+
+        if (inputStream != null) {
+
+            List<WeatherReport> reports = parser.parse(inputStream);
+
+            repository.saveAll(reports);
+
+            System.out.println("CSV Data Loaded: " + reports.size());
+        } else {
+            System.out.println("CSV file not found!");
+        }
+    }
+
+	@Override
+	public WeatherReport getByDate(String date) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
+
+		LocalDateTime ldt = LocalDateTime.parse(date, formatter);
+
+		Instant instant = ldt.atZone(ZoneOffset.UTC).toInstant();
+
+		return repository.findByDate(instant).orElse(null);
+	}
+
+	@Override
+	public List<WeatherReport> getByMonth(int month) {
+		return repository.findAll();
+	}
+
+	@Override
+	public List<WeatherReport> getTemperatureStats(int year) {
+		return repository.findAll(); 
+	}
+}

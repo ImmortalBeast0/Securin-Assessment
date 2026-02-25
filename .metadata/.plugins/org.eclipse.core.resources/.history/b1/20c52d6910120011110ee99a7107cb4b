@@ -1,0 +1,10 @@
+package com.kce.weather.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.kce.weather.entity.WeatherReport;
+
+public interface WeatherReportService {
+	public Optional<WeatherReport> getByDate(); 
+}

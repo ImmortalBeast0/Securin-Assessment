@@ -1,0 +1,12 @@
+package com.kce.weather.service;
+
+
+
+
+public interface WeatherReportService {
+	Optional<WeatherReport> getByDate(String date);
+
+    List<WeatherReport> getByMonth(int month);
+
+    List<Object[]> getTemperatureStatsByYear(int year);
+}

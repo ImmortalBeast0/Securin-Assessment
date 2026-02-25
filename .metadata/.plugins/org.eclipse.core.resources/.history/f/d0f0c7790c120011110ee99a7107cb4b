@@ -1,0 +1,8 @@
+package com.kce.weather.service;
+
+import org.jvnet.hk2.annotations.Service;
+
+
+public interface WeatherReportService {
+
+}

@@ -1,0 +1,8 @@
+package com.kce.weather.service.impl;
+
+import org.jvnet.hk2.annotations.Service;
+
+@Service
+public class WeatherReportServiceImpl {
+
+}

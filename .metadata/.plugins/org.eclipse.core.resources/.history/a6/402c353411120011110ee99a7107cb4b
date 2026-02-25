@@ -1,0 +1,54 @@
+package com.kce.weather.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import com.kce.weather.entity.WeatherReport;
+import com.kce.weather.service.WeatherReportService;
+import com.kce.weather.service.impl.WeatherReportServiceImpl;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@RestController
+@RequestMapping("/weather")
+public class WeatherController {
+
+    private final WeatherReportServiceImpl weatherService;
+
+    public WeatherController(WeatherReportServiceImpl weatherService) {
+        this.weatherService = weatherService;
+    }
+
+    
+    @GetMapping("/{date}")
+    public ResponseEntity<WeatherReport> getByDate(@PathVariable String date) {
+
+        Optional<WeatherReport> report = weatherService.getByDate(date);
+
+        return new ResponseEntity<WeatherReport>(report.get(), HttpStatus.OK);
+    }
+
+   
+    @GetMapping("/month/{month}")
+    public ResponseEntity<List<WeatherReport>> getByMonth(@PathVariable int month) {
+
+        List<WeatherReport> list = weatherService.getByMonth(month);
+
+        return new ResponseEntity<List<WeatherReport>>(list, HttpStatus.OK);
+    }
+
+    
+    @GetMapping("/temperature/{year}")
+    public ResponseEntity<List<Object[]>> getTemperatureStats(@PathVariable int year) {
+
+        List<Object[]> stats = weatherService.getTemperatureStats(year);
+
+        return new ResponseEntity<List<Object[]>>(stats, HttpStatus.OK);
+    }
+}

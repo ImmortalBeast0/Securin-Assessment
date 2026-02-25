@@ -1,0 +1,45 @@
+package com.kce.weather.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.kce.weather.entity.WeatherReport;
+import com.kce.weather.service.WeatherReportService;
+
+@RestController
+@RequestMapping("/weather")
+public class WeatherController {
+
+    private final WeatherReportService service;
+
+    public WeatherController(WeatherReportService service) {
+        this.service = service;
+    }
+
+    @GetMapping("/{date}")
+    public ResponseEntity<WeatherReport> getByDate(@PathVariable String date) {
+
+        WeatherReport report = service.getByDate(date);
+
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @GetMapping("/month/{month}")
+    public ResponseEntity<List<WeatherReport>> getByMonth(@PathVariable int month) {
+
+        List<WeatherReport> list = service.getByMonth(month);
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/temperature/{year}")
+    public ResponseEntity<List<WeatherReport>> getTemperatureStats(@PathVariable int year) {
+
+        List<WeatherReport> list = service.getTemperatureStats(year);
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+}

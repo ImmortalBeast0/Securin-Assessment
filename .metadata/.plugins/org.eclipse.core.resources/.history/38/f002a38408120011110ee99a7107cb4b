@@ -1,0 +1,12 @@
+package com.kce.weather.entity;
+
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@Data
+@Entity
+public class WeatherReport {
+
+}

@@ -1,0 +1,55 @@
+package com.kce.weather.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import com.kce.weather.entity.WeatherReport;
+import com.kce.weather.service.WeatherReportService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@RestController
+@RequestMapping("/weather")
+public class WeatherController {
+
+    private final WeatherReportService weatherService;
+
+    public WeatherController(WeatherReportService weatherService) {
+        this.weatherService = weatherService;
+    }
+
+    // 🔹 Get weather by exact date
+    @Operation(summary = "Get weather by date", description = "Fetch weather details by date")
+    @GetMapping("/{date}")
+    public ResponseEntity<WeatherReport> getByDate(@PathVariable String date) {
+
+        WeatherReport report = weatherService.getByDate(date);
+
+        return new ResponseEntity<WeatherReport>(report, HttpStatus.OK);
+    }
+
+    // 🔹 Get weather by month (1-12)
+    @Operation(summary = "Get weather by month", description = "Fetch weather details for given month")
+    @GetMapping("/month/{month}")
+    public ResponseEntity<List<WeatherReport>> getByMonth(@PathVariable int month) {
+
+        List<WeatherReport> list = weatherService.getByMonth(month);
+
+        return new ResponseEntity<List<WeatherReport>>(list, HttpStatus.OK);
+    }
+
+    // 🔹 Get temperature stats by year
+    @Operation(summary = "Temperature stats by year", description = "Fetch max and min temperature for each month")
+    @GetMapping("/temperature/{year}")
+    public ResponseEntity<List<Object[]>> getTemperatureStats(@PathVariable int year) {
+
+        List<Object[]> stats = weatherService.getTemperatureStats(year);
+
+        return new ResponseEntity<List<Object[]>>(stats, HttpStatus.OK);
+    }
+}
